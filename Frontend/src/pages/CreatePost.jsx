@@ -6,7 +6,7 @@ import "../utils css/CreatePost.css";
 function CreatePost() {
   const [title, setTitle] = useState("");
   const [markdownContent, setMarkdownContent] = useState("");
-  const [categories, setCategories] = useState('');
+  const [categories, setCategories] = useState("");
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,18 +23,20 @@ function CreatePost() {
       return;
     }
 
-    const categoriesArray = categories.split(',').map(cat => cat.trim()).filter(cat => cat);
+    const categoriesArray = categories
+      .split(",")
+      .map((cat) => cat.trim())
+      .filter((cat) => cat);
 
     try {
       await apiService.post("/posts", {
         title,
         markdownContent,
-        categories: categoriesArray, 
+        categories: categoriesArray,
         author: "Admin",
       });
 
-      navigate("/admin/dashboard");
-
+      navigate("/");
     } catch (err) {
       console.error("Failed to create post:", err);
       setError(
@@ -47,7 +49,7 @@ function CreatePost() {
 
   return (
     <div className="create-post-page">
-      <h2>Create New Post</h2>
+      <h2 className="page-title">Create New Post</h2>
       <form onSubmit={handleSubmit} className="create-post-form">
         <div className="form-group">
           <label htmlFor="title">Title</label>
@@ -86,11 +88,11 @@ function CreatePost() {
         </div>
         {error && <p className="error-message">{error}</p>}
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? 'Publishing...' : 'Publish Post'}
+          {loading ? "Publishing..." : "Publish Post"}
         </button>
       </form>
     </div>
   );
-};
+}
 
 export default CreatePost;

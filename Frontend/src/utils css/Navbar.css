@@ -17,13 +17,13 @@
   margin: 0;
   padding: 0;
   display: flex;
+  align-items: center;
 }
 
 .navbar-links li {
   margin-left: 1.5rem;
 }
 
-/* Style the links within the navbar */
 .navbar a {
   color: white;
   text-decoration: none;
@@ -31,5 +31,26 @@
 }
 
 .navbar a:hover {
-  color: #61dafb; /* A light blue, React-like color */
+  color: #61dafb;
+}
+
+
+.navbar-user-greeting span {
+  color: #ccc;
+  cursor: default;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  transition: color 0.3s ease-in-out;
+}
+
+.logout-button:hover {
+  color: #61dafb;
 }

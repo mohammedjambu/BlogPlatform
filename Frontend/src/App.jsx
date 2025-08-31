@@ -9,10 +9,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import CategoryPage from "./pages/CategoryPage";
+import RegisterPage from "./pages/RegisterPage";
+import { AuthProvider } from "./context/AuthContext";
+import MyPostsPage from "./pages/MyPostsPage";
 
 function App() {
   return (
-    <div>
+    <AuthProvider>
       <Navbar />
 
       <main style={{ padding: "1rem" }}>
@@ -20,7 +23,35 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/post/:slug" element={<PostPage />} />
           <Route path="/category/:categoryName" element={<CategoryPage />} />
-          <Route path="/admin/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          <Route
+            path="/my-posts"
+            element={
+              <ProtectedRoute>
+                <MyPostsPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/create-post"
+            element={
+              <ProtectedRoute>
+                <CreatePost />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/edit-post/:id"
+            element={
+              <ProtectedRoute>
+                <EditPost />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/admin/dashboard"
@@ -30,27 +61,9 @@ function App() {
               </ProtectedRoute>
             }
           />
-
-          <Route
-            path="/admin/create-post"
-            element={
-              <ProtectedRoute>
-                <CreatePost />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/admin/edit-post/:id"
-            element={
-              <ProtectedRoute>
-                <EditPost />
-              </ProtectedRoute>
-            }
-          />
         </Routes>
       </main>
-    </div>
+    </AuthProvider>
   );
 }
 

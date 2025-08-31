@@ -29,14 +29,18 @@
 .posts-table th,
 .posts-table td {
     padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
-    text-align: left;
+    vertical-align: middle;
 }
 
 .posts-table thead th {
     background-color: #f8f9fa;
-    font-weight: 600;
+    font-weight: 700;
     color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.posts-table tbody tr {
+    border-bottom: 1px solid #ddd;
 }
 
 .posts-table tbody tr:nth-of-type(even) {
@@ -47,22 +51,34 @@
     background-color: #e9ecef;
 }
 
-.loading-message,
-.error-message {
-    text-align: center;
-    padding: 2rem;
-    font-size: 1.2rem;
-    color: #6c757d;
+.posts-table th:nth-child(1),
+.posts-table td:nth-child(1) {
+    width: 45%;
+    text-align: left;
 }
 
-.error-message {
-    color: #dc3545;
+.posts-table th:nth-child(2),
+.posts-table td:nth-child(2) {
+    width: 20%;
+    text-align: left;
+}
+
+.posts-table th:nth-child(3),
+.posts-table td:nth-child(3) {
+    width: 15%;
+    text-align: center;
+}
+
+.posts-table th:nth-child(4),
+.posts-table td:nth-child(4) {
+    width: 20%;
+    text-align: center;
 }
 
 .posts-table .action-buttons {
     display: flex;
     gap: 10px;
-    align-items: center;
+    justify-content: center;
 }
 
 .action-buttons .btn {
@@ -92,15 +108,97 @@
 }
 
 .dashboard-header .create-post-btn {
-  padding: 8px 16px;
-  background-color: #28a745;
-  color: white;
-  border-radius: 5px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background-color 0.2s ease;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
 }
 
 .dashboard-header .create-post-btn:hover {
-  background-color: #218838;
+    background-color: #218838;
+}
+
+.loading-message,
+.error-message {
+    text-align: center;
+    padding: 2rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .posts-table thead {
+        display: none;
+    }
+
+    .posts-table tr {
+        display: block;
+        margin-bottom: 1.5rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 1rem;
+    }
+
+    .posts-table td {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border-bottom: none;
+        padding: 0.75rem 0.25rem;
+    }
+
+    .posts-table td:not(:last-child) {
+        border-bottom: 1px dotted #ccc;
+    }
+
+    .posts-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+        color: #333;
+    }
+
+    .posts-table td[data-label="Actions"]::before {
+        display: none;
+    }
+
+    .posts-table td[data-label="Actions"] {
+        padding-top: 1rem;
+    }
+
+    .posts-table .action-buttons {
+        justify-content: flex-start;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.posts-table tbody tr {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.posts-table tbody tr:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.posts-table tbody tr:nth-child(2) {
+    animation-delay: 0.2s;
 }

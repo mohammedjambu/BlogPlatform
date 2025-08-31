@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import apiService from "../config/apiService";
 import "../utils css/LoginPage.css";
 import { useAuth } from "../context/AuthContext";
 
-function LoginPage() {
+function RegisterPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -16,10 +18,16 @@ function LoginPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await apiService.post("/auth/login", {
+      const response = await apiService.post("/auth/register", {
         username,
         password,
       });
@@ -29,12 +37,12 @@ function LoginPage() {
 
       navigate("/");
     } catch (err) {
-      console.error("Login failed:", err);
+      console.error("Registration failed:", err);
 
       if (err.response && err.response.data && err.response.data.message) {
         setError(err.response.data.message);
       } else {
-        setError("Login failed. Please try again.");
+        setError("Registration failed. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -43,7 +51,7 @@ function LoginPage() {
 
   return (
     <div className="login-page">
-      <h2>Login Page</h2>
+      <h2>Create an Account</h2>
       <form className="login-form" onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="username">Username</label>
@@ -51,7 +59,7 @@ function LoginPage() {
             type="text"
             id="username"
             name="username"
-            placeholder="Enter your username"
+            placeholder="Enter a username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
@@ -64,24 +72,39 @@ function LoginPage() {
             type="password"
             id="password"
             name="password"
-            placeholder="Enter your password"
+            placeholder="Create a password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             disabled={loading}
           />
         </div>
+
+        <div className="form-group">
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="Confirm your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            disabled={loading}
+          />
+        </div>
+
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
         <button type="submit" className="login-button" disabled={loading}>
-          {loading ? "Logging In..." : "Log In"}
+          {loading ? "Creating Account..." : "Sign Up"}
         </button>
 
         <p style={{ textAlign: "center", marginTop: "1rem" }}>
-          Don't have an account? <Link to="/register">Sign Up</Link>
+          Already have an account? <Link to="/admin/login">Log In</Link>
         </p>
       </form>
     </div>
   );
 }
 
-export default LoginPage;
+export default RegisterPage;

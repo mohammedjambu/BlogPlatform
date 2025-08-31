@@ -2,8 +2,8 @@ import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth();
+function AdminRoute({ children }) {
+  const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -14,7 +14,11 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  if (user.role !== "admin") {
+    return <Navigate to="/my-posts" replace />;
+  }
+
   return children;
 }
 
-export default ProtectedRoute;
+export default AdminRoute;

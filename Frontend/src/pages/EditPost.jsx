@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import apiService from "../config/apiService";
-import "./CreatePost.css";
+import "../utils css/CreatePost.css";
+import { useAuth } from "../context/AuthContext";
 
 const EditPost = () => {
   const { id } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [markdownContent, setMarkdownContent] = useState("");
-  const [categories, setCategories] = useState('');
+  const [categories, setCategories] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
       setLoading(true);
       try {
-        const response = await apiService.get(`/posts/${id}`);
+        const response = await apiService.get(`/posts/id/${id}`);
         setTitle(response.data.title);
         setMarkdownContent(response.data.markdownContent);
 
-         if (response.data.categories && Array.isArray(response.data.categories)) {
-          setCategories(response.data.categories.join(', '));
+        if (
+          response.data.categories &&
+          Array.isArray(response.data.categories)
+        ) {
+          setCategories(response.data.categories.join(", "));
         }
-
       } catch (err) {
         console.error("Failed to fetch post for editing:", err);
         setError("Failed to load post data. Please try again.");
@@ -48,7 +52,10 @@ const EditPost = () => {
       return;
     }
 
-    const categoriesArray = categories.split(',').map(cat => cat.trim()).filter(cat => cat);
+    const categoriesArray = categories
+      .split(",")
+      .map((cat) => cat.trim())
+      .filter((cat) => cat);
 
     try {
       await apiService.put(`/posts/${id}`, {
@@ -57,13 +64,18 @@ const EditPost = () => {
         categories: categoriesArray,
       });
 
-      navigate("/admin/dashboard");
+      if (user?.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/my-posts");
+      }
     } catch (err) {
       console.error("Failed to update post:", err);
       setError(
         err.response?.data?.message ||
           "Failed to update post. Please try again."
       );
+    } finally {
       setSubmitting(false);
     }
   };

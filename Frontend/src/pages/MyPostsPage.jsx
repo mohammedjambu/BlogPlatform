@@ -4,7 +4,7 @@ import apiService from "../config/apiService";
 import { useAuth } from "../context/AuthContext";
 import "../utils css/AdminDashboard.css";
 
-function AdminDashboard() {
+function MyPostsPage() {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,13 +38,16 @@ function AdminDashboard() {
     }
   };
 
-  if (loading) return <div className="loading-message">Loading posts...</div>;
+  if (loading)
+    return <div className="loading-message">Loading your posts...</div>;
   if (error) return <div className="error-message">{error}</div>;
+
+  const userPosts = posts.filter((post) => post.author?._id === user?._id);
 
   return (
     <div className="admin-dashboard">
       <div className="dashboard-header">
-        <h2>All Posts (Admin)</h2>
+        <h2>Your Posts</h2>
         <Link to="/create-post" className="create-post-btn">
           + Create New Post
         </Link>
@@ -54,44 +57,33 @@ function AdminDashboard() {
         <thead>
           <tr>
             <th>Title</th>
-            <th>Author</th>
             <th>Published Date</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {posts.length > 0 ? (
-            posts.map((post) => (
+          {userPosts.length > 0 ? (
+            userPosts.map((post) => (
               <tr key={post._id}>
-                <td data-label="Title">{post.title}</td>
-                <td data-label="Author">
-                  {post.author?.username || "Unknown"}
-                </td>
-                <td data-label="Published Date">
-                  {new Date(post.createdAt).toLocaleDateString()}
-                </td>
-                <td data-label="Actions">
-                  <div className="action-buttons">
-                    <Link
-                      to={`/edit-post/${post._id}`}
-                      className="btn edit-btn"
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(post._id)}
-                      className="btn delete-btn"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                <td>{post.title}</td>
+                <td>{new Date(post.createdAt).toLocaleDateString()}</td>
+                <td className="action-buttons">
+                  <Link to={`/edit-post/${post._id}`} className="btn edit-btn">
+                    Edit
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(post._id)}
+                    className="btn delete-btn"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" style={{ textAlign: "center" }}>
-                No posts found.
+              <td colSpan="3" style={{ textAlign: "center" }}>
+                You haven't created any posts yet.
               </td>
             </tr>
           )}
@@ -101,4 +93,4 @@ function AdminDashboard() {
   );
 }
 
-export default AdminDashboard;
+export default MyPostsPage;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async"; // For SEO
+import { Helmet } from "react-helmet-async";
 import apiService from "../config/apiService";
 
 import PostListItem from "../components/PostListItem";

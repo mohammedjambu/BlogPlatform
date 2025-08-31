@@ -60,14 +60,14 @@ function HomePage() {
   return (
     <div className="home-page">
       <Helmet>
-        <title>My Awesome Blog - Latest Posts</title>
-        <meta 
-          name="description" 
-          content="Welcome to My Awesome Blog. Read the latest articles on web development, technology, and more." 
+        <title>My Blogs - Latest Posts</title>
+        <meta
+          name="description"
+          content="Welcome to My Awesome Blog. Read the latest articles on web development, technology, and more."
         />
       </Helmet>
 
-      <h1>Latest Posts</h1>
+      <h1 className="page-title">Latest Posts</h1>
       <div className="post-list">
         {posts.length > 0 ? (
           posts.map((post) => <PostListItem key={post._id} post={post} />)
@@ -76,7 +76,6 @@ function HomePage() {
         )}
       </div>
 
-      {/* 8. Render the pagination controls only if there are posts and pages. */}
       {totalPages > 0 && (
         <div className="pagination-controls">
           <div className="page-info">
@@ -85,14 +84,14 @@ function HomePage() {
           <div className="pagination-buttons">
             <button
               onClick={handlePreviousPage}
-              disabled={currentPage === 1} // Disable if on the first page
+              disabled={currentPage === 1}
               className="btn"
             >
               Previous
             </button>
             <button
               onClick={handleNextPage}
-              disabled={currentPage === totalPages} // Disable if on the last page
+              disabled={currentPage === totalPages}
               className="btn"
             >
               Next

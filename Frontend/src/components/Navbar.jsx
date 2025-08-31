@@ -1,22 +1,59 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import '../utils css/Navbar.css'
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "../utils css/Navbar.css";
 
 function Navbar() {
-  return (
-    <nav className='navbar'>
-        <Link to="/" className='navbar-brand'>My Blog</Link>
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
 
-        <ul className='navbar-links'>
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  return (
+    <nav className="navbar">
+      <Link to="/" className="navbar-brand">
+        My Blog
+      </Link>
+
+      <ul className="navbar-links">
+        <li>
+          <Link to="/create-post">Create Post</Link>
+        </li>
+
+        {isAuthenticated ? (
+          <>
+            {user.role === "admin" ? (
+              <li>
+                <Link to="/admin/dashboard">Dashboard</Link>
+              </li>
+            ) : (
+              <li>
+                <Link to="/my-posts">Your Posts</Link>
+              </li>
+            )}
+
             <li>
-                <Link to="/">Home</Link>
+              <button onClick={handleLogout} className="logout-button">
+                Logout
+              </button>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <Link to="/login">Login</Link>
             </li>
             <li>
-                <Link to="/admin/login">Admin Login</Link>
+              <Link to="/register">Register</Link>
             </li>
-        </ul>
+          </>
+        )}
+      </ul>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

@@ -1,13 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import "../utils css/PostPage.css";
 import apiService from "../config/apiService";
 import { Helmet } from "react-helmet-async";
 import CategoryTag from "../components/CategoryTag";
+import { useAuth } from "../context/AuthContext";
 
 function PostPage() {
+  const { user } = useAuth();
   const { slug } = useParams();
   const navigate = useNavigate();
 
@@ -52,7 +54,6 @@ function PostPage() {
 
   const createMetaDescription = (markdown) => {
     if (!markdown) return "";
-    // Remove Markdown formatting and trim to a suitable length (e.g., 155 chars).
     const plainText = markdown
       .replace(/!\[.*?\]\(.*?\)/g, "") // Remove images
       .replace(/\[(.*?)\]\(.*?\)/g, "$1") // Keep link text
@@ -75,14 +76,15 @@ function PostPage() {
   }
 
   if (!post) {
-    // This case will be hit if slug was undefined and `setError` was called,
-    // or if the post genuinely wasn't found (404) and `setError` was also called.
     return (
       <div style={{ textAlign: "center", marginTop: "2rem" }}>
         Could not retrieve post details.
       </div>
     );
   }
+
+  const canModify =
+    user && (user.role === "admin" || user._id === post.author?._id);
 
   return (
     <article className="post-full">
@@ -95,12 +97,20 @@ function PostPage() {
       </Helmet>
 
       <h1>{post.title}</h1>
+      {canModify && (
+        <div className="post-actions">
+          <Link to={`/edit-post/${post._id}`} className="btn edit-btn">
+            Edit Post
+          </Link>
+        </div>
+      )}
+
       <div className="post-full-meta">
-        <span>by {post.author}</span>
+        <span>by {post.author?.username || "Unknown"}</span>
         <span>
           Published on {new Date(post.createdAt).toLocaleDateString()}
         </span>
-        
+
         {post.categories && post.categories.length > 0 && (
           <div className="post-categories">
             {post.categories.map((category) => (
