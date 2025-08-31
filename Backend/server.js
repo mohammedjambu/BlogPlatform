@@ -34,7 +34,7 @@ connectDB();
 
 const allowedOrigins = [
   'http://localhost:5173', // local frontend
-  'https://blog-platform-six-zeta.vercel.app/' // Vercel URL
+  'https://blog-platform-six-zeta.vercel.app' // Vercel URL
 ];
 
 // Setup CORS options
