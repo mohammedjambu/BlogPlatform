@@ -31,14 +31,24 @@ const connectDB = async () => {
 };
 connectDB();
 
-const vercelFrontendURL = "https://wanderlust-ebon-iota.vercel.app";
 
-app.use(
-  cors({
-    origin: ["http://localhost:5173", vercelFrontendURL],
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  'http://localhost:5173', // local frontend
+  'https://blog-platform-six-zeta.vercel.app/' // Vercel URL
+];
+
+// Setup CORS options
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+};
+
+app.use(cors(corsOptions));
 
 // Routes
 app.use("/api/posts", postRoutes);
