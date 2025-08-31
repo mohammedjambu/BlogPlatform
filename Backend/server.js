@@ -39,15 +39,19 @@ const allowedOrigins = [
 
 // Setup CORS options
 const corsOptions = {
-  origin: allowedOrigins, 
-  credentials: true,
-};
+  origin: function (origin, callback) {
+    console.log(`CORS CHECK: The request origin is -> [${origin}]`);
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  console.log(`Incoming request from origin: ${origin}`);
-  next();
-});
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      console.log(`CORS CHECK: Origin [${origin}] is ALLOWED.`);
+      callback(null, true);
+    } else {
+      console.error(`CORS CHECK: Origin [${origin}] is NOT ALLOWED.`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+};
 
 app.use(cors(corsOptions));
 
